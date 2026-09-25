@@ -23,3 +23,13 @@ public static class InputSanitizer
         return string.Empty;
     }
 }
+
+using System.Web;
+
+public static class OutputSanitizer
+{
+    public static string EscapeForHtml(string input)
+    {
+        return HttpUtility.HtmlEncode(input);
+    }
+}
