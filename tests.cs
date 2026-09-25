@@ -65,3 +65,22 @@ public class AuthTests
     }
 }
 
+[Test]
+public void Test_SQLInjection_Prevention()
+{
+    string maliciousInput = "'; DROP TABLE Users; --";
+    bool result = authService.AuthenticateUser(maliciousInput, "password");
+
+    Assert.IsFalse(result, "SQL injection attempt should fail.");
+}
+
+[Test]
+public void Test_XSS_Prevention()
+{
+    string maliciousInput = "<script>alert('XSS');</script>";
+    string escaped = OutputSanitizer.EscapeForHtml(maliciousInput);
+
+    Assert.IsFalse(escaped.Contains("<script>"), "XSS payload should be escaped.");
+    Assert.IsTrue(escaped.Contains("&lt;script&gt;"), "Input should be safely encoded.");
+}
+
