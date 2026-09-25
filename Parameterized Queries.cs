@@ -1,12 +1,16 @@
 using (var connection = new SqlConnection(connectionString))
 {
-    string query = "INSERT INTO Users (Username, Email) VALUES (@Username, @Email)";
+    string query = "SELECT * FROM Users WHERE Username = @Username";
     using (var command = new SqlCommand(query, connection))
     {
-        command.Parameters.AddWithValue("@Username", InputSanitizer.SanitizeUsername(username));
-        command.Parameters.AddWithValue("@Email", InputSanitizer.SanitizeEmail(email));
-
+        command.Parameters.AddWithValue("@Username", username);
         connection.Open();
-        command.ExecuteNonQuery();
+        using (var reader = command.ExecuteReader())
+        {
+            while (reader.Read())
+            {
+                // Process user data safely
+            }
+        }
     }
 }
