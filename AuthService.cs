@@ -49,4 +49,20 @@ public class AuthService
             }
         }
     }
+    public bool AuthorizeUser(string username, string requiredRole)
+{
+    using (var connection = new SqlConnection(_connectionString))
+    {
+        string query = "SELECT Role FROM Users WHERE Username = @Username";
+        using (var command = new SqlCommand(query, connection))
+        {
+            command.Parameters.AddWithValue("@Username", username);
+            connection.Open();
+
+            var role = command.ExecuteScalar()?.ToString();
+            return role == requiredRole;
+        }
+    }
+}
+
 }
